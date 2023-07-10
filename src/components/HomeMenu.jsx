@@ -3,11 +3,18 @@ import { Link } from "react-router-dom";
 
 const HomeMenu = () => {
   return (
-    <div>
-      Hilloooo
-      <div>
+    <div className="bdr py-20 px-4">
+      <h1 className="font-bold text-5xl">Customer Survey</h1>
+      <p className="mt-4">
+        We want to hear from you! Help us enhance your experience by sharing
+        your thoughts and suggestions through this survey.
+      </p>
+
+      <div className="mt-4">
         <Link to={"/survey"}>
-          <button>Go For Survey</button>
+          <button className="bg-mainclr shadow text-white px-4 py-1 rounded-md">
+            Start
+          </button>
         </Link>
       </div>
     </div>

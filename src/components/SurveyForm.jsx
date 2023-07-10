@@ -17,7 +17,6 @@ const SurveyForm = () => {
     "What could we do to improve our service?",
   ];
 
-  // Update customerSessionId when component mounts
   useState(() => {
     setCustomerSessionId(generateSessionId());
   }, []);
@@ -57,14 +56,19 @@ const SurveyForm = () => {
       return <div>Thank you for your feedback!</div>;
     }
     return (
-      <div>
-        <div>
+      <div className="mt-6">
+        <div >
           Question {currentQuestionIndex + 1}/{questions.length}
         </div>
         <div>{question}</div>
         {currentQuestionIndex !== 3 && (
-          <div>
-            <button onClick={() => handleAnswer(1)}>1</button>
+          <div className="flex justify-between mt-6">
+            <button
+              className="bg-mainclr rounded-full p-1"
+              onClick={() => handleAnswer(1)}
+            >
+              1
+            </button>
             <button onClick={() => handleAnswer(2)}>2</button>
             <button onClick={() => handleAnswer(3)}>3</button>
             <button onClick={() => handleAnswer(4)}>4</button>
@@ -72,7 +76,7 @@ const SurveyForm = () => {
           </div>
         )}
         {currentQuestionIndex === 3 && (
-          <div>
+          <div className="flex justify-between mt-6">
             <button onClick={() => handleAnswer(1)}>1</button>
             <button onClick={() => handleAnswer(2)}>2</button>
             <button onClick={() => handleAnswer(3)}>3</button>
@@ -87,19 +91,42 @@ const SurveyForm = () => {
         )}
         {currentQuestionIndex === 4 && (
           <div>
-            <textarea rows="4" cols="50" onBlur={handleTextAnswer} />
+            <textarea className="w-full mt-6 border p-4 resize-none h-20 overflow-auto " onBlur={handleTextAnswer} />
           </div>
         )}
+        <div className="mt-6">
+
         {currentQuestionIndex > 0 && (
-          <button onClick={handlePrevious}>Previous</button>
+          <button
+            className="bg-mainclr shadow text-white px-4 py-1 rounded-md"
+            onClick={handlePrevious}
+          >
+            Previous
+          </button>
         )}
-        <button onClick={handleSkip}>Skip</button>
+        <button
+          className="bg-mainclr mx-6 shadow text-white px-4 py-1 rounded-md"
+          onClick={handleSkip}
+        >
+          Skip
+        </button>
         {currentQuestionIndex < questions.length - 1 && (
-          <button onClick={handleNext}>Next</button>
+          <button
+            className="bg-mainclr shadow text-white px-4 py-1 rounded-md"
+            onClick={handleNext}
+          >
+            Next
+          </button>
         )}
         {currentQuestionIndex === questions.length - 1 && (
-          <button onClick={handleSubmit}>Submit</button>
+          <button
+            className="bg-mainclr  shadow text-white px-4 py-1 rounded-md"
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
         )}
+        </div>
       </div>
     );
   };
@@ -112,8 +139,13 @@ const SurveyForm = () => {
 
   return (
     <div>
-      <h1>Welcome to the Survey</h1>
-      <button onClick={() => setCurrentQuestionIndex(0)}>Start</button>
+      <h1 className="font-bold text-5xl">Welcome to the Survey</h1>
+      {/* <button
+        className="font-bold text-xl"
+        onClick={() => setCurrentQuestionIndex(0)}
+      >
+        Start
+      </button> */}
       {renderCurrentQuestion()}
     </div>
   );
