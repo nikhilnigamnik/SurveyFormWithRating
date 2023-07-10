@@ -4,6 +4,7 @@ const SurveyForm = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [customerSessionId, setCustomerSessionId] = useState("");
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
   const generateSessionId = () => {
     return "session_id";
@@ -25,11 +26,10 @@ const SurveyForm = () => {
     const question = questions[currentQuestionIndex];
     setAnswers((prevAnswers) => [
       ...prevAnswers,
-      { question, answer: parseInt(rating) },
+      { question, answer: parseInt(rating, 10) }, // Parse rating as an integer
     ]);
     setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
   };
-  
 
   const handlePrevious = () => {
     setCurrentQuestionIndex((prevIndex) => prevIndex - 1);
@@ -54,7 +54,46 @@ const SurveyForm = () => {
     setAnswers((prevAnswers) => [...prevAnswers, { question, answer }]);
   };
 
+  const handleSubmit = async () => {
+    answers.forEach((answer) => {
+      console.log(`Question: ${answer.question}, Rating: ${answer.answer}`);
+    });
+
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sessionId: customerSessionId,
+        answers: answers,
+      }),
+    };
+
+    try {
+      const response = await fetch(
+        "http://localhost:4000/api/survey/answers",
+        requestOptions
+      );
+      if (response.ok) {
+        console.log("Survey answers saved successfully");
+        setSubmitSuccess(true);
+      } else {
+        console.log("Error saving survey answers");
+      }
+    } catch (error) {
+      console.log("Error saving survey answers: " + error.message);
+    }
+  };
+
   const renderCurrentQuestion = () => {
+    if (submitSuccess) {
+      return (
+        <div>
+          <h3>Thank you for your feedback!</h3>
+          <p>Survey answers saved successfully.</p>
+        </div>
+      );
+    }
+
     const question = questions[currentQuestionIndex];
     if (currentQuestionIndex === questions.length) {
       return <div>Thank you for your feedback!</div>;
@@ -137,36 +176,9 @@ const SurveyForm = () => {
     );
   };
 
-  const handleSubmit = () => {
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        sessionId: customerSessionId,
-        answers: answers,
-      }),
-    };
-  
-    fetch("http://localhost:4000/api/survey/answers", requestOptions)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Survey answers saved successfully");
-      })
-      .catch((error) => {
-        console.log("Error saving survey answers: " + error.message);
-      });
-  };
-  
-
   return (
     <div>
       <h1 className="font-bold text-5xl">Welcome to the Survey</h1>
-      {/* <button
-        className="font-bold text-xl"
-        onClick={() => setCurrentQuestionIndex(0)}
-      >
-        Start
-      </button> */}
       {renderCurrentQuestion()}
     </div>
   );
