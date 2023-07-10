@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const SurveyForm = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -6,9 +7,9 @@ const SurveyForm = () => {
   const [customerSessionId, setCustomerSessionId] = useState("");
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  const generateSessionId = () => {
-    return "session_id";
-  };
+  const navigate = useNavigate();
+
+  const generateSessionId = () => "session_id";
 
   const questions = [
     "How satisfied are you with our products?",
@@ -26,7 +27,7 @@ const SurveyForm = () => {
     const question = questions[currentQuestionIndex];
     setAnswers((prevAnswers) => [
       ...prevAnswers,
-      { question, answer: parseInt(rating, 10) }, // Parse rating as an integer
+      { question, answer: parseInt(rating, 10) },
     ]);
     setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
   };
@@ -45,8 +46,16 @@ const SurveyForm = () => {
       ...prevAnswers,
       { question, answer: "skipped" },
     ]);
-    setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+    setCurrentQuestionIndex((prevIndex) => {
+      const nextIndex = prevIndex + 1;
+      if (nextIndex < questions.length) {
+        return nextIndex;
+      } else {
+        return prevIndex;
+      }
+    });
   };
+  
 
   const handleTextAnswer = (event) => {
     const answer = event.target.value;
@@ -55,7 +64,7 @@ const SurveyForm = () => {
   };
 
   const handleSubmit = async () => {
-    answers.forEach((answer) => {
+    answers.map((answer) => {
       console.log(`Question: ${answer.question}, Rating: ${answer.answer}`);
     });
 
@@ -76,6 +85,8 @@ const SurveyForm = () => {
       if (response.ok) {
         console.log("Survey answers saved successfully");
         setSubmitSuccess(true);
+        // if user submit their survey it should go to success page
+        navigate("/success")
       } else {
         console.log("Error saving survey answers");
       }
@@ -85,53 +96,50 @@ const SurveyForm = () => {
   };
 
   const renderCurrentQuestion = () => {
-    if (submitSuccess) {
-      return (
-        <div>
-          <h3>Thank you for your feedback!</h3>
-          <p>Survey answers saved successfully.</p>
-        </div>
-      );
-    }
-
+  
     const question = questions[currentQuestionIndex];
-    if (currentQuestionIndex === questions.length) {
-      return <div>Thank you for your feedback!</div>;
-    }
+    const isLastQuestion = currentQuestionIndex === questions.length - 1;
+
     return (
       <div className="mt-6">
         <div>
           Question {currentQuestionIndex + 1}/{questions.length}
         </div>
         <div>{question}</div>
+
+        {/* for all question with 1 to 5 rating */}
         {currentQuestionIndex !== 3 && (
           <div className="flex justify-between mt-6">
-            <button
-              className="bg-mainclr rounded-full p-1"
-              onClick={() => handleAnswer(1)}
-            >
-              1
-            </button>
-            <button onClick={() => handleAnswer(2)}>2</button>
-            <button onClick={() => handleAnswer(3)}>3</button>
-            <button onClick={() => handleAnswer(4)}>4</button>
-            <button onClick={() => handleAnswer(5)}>5</button>
+            {[1, 2, 3, 4, 5].map((rating) => (
+              <button
+                key={rating}
+                className="bg-blue-100 transition-all duration-300 hover:bg-mainclr hover:text-white rounded-full w-10 h-10"
+                onClick={() => handleAnswer(rating)}
+              >
+                {rating}
+              </button>
+            ))}
           </div>
         )}
+
+        {/* for fourth question with 1 to 10 rating */}
+
         {currentQuestionIndex === 3 && (
           <div className="flex justify-between mt-6">
-            <button onClick={() => handleAnswer(1)}>1</button>
-            <button onClick={() => handleAnswer(2)}>2</button>
-            <button onClick={() => handleAnswer(3)}>3</button>
-            <button onClick={() => handleAnswer(4)}>4</button>
-            <button onClick={() => handleAnswer(5)}>5</button>
-            <button onClick={() => handleAnswer(6)}>6</button>
-            <button onClick={() => handleAnswer(7)}>7</button>
-            <button onClick={() => handleAnswer(8)}>8</button>
-            <button onClick={() => handleAnswer(9)}>9</button>
-            <button onClick={() => handleAnswer(10)}>10</button>
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((rating) => (
+              <button
+                className="bg-blue-100 transition-all duration-300 hover:bg-mainclr hover:text-white rounded-full w-10 h-10"
+                key={rating}
+                onClick={() => handleAnswer(rating)}
+              >
+                {rating}
+              </button>
+            ))}
           </div>
         )}
+
+        {/* navigation button */}
+
         {currentQuestionIndex === 4 && (
           <div>
             <textarea
@@ -163,9 +171,9 @@ const SurveyForm = () => {
               Next
             </button>
           )}
-          {currentQuestionIndex === questions.length - 1 && (
+          {isLastQuestion && (
             <button
-              className="bg-mainclr  shadow text-white px-4 py-1 rounded-md"
+              className="bg-mainclr shadow text-white px-4 py-1 rounded-md"
               onClick={handleSubmit}
             >
               Submit
@@ -177,7 +185,7 @@ const SurveyForm = () => {
   };
 
   return (
-    <div>
+    <div className="bg-white py-20 px-16 bdr">
       <h1 className="font-bold text-5xl">Welcome to the Survey</h1>
       {renderCurrentQuestion()}
     </div>
