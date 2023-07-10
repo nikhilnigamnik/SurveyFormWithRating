@@ -86,7 +86,8 @@ const SurveyForm = () => {
         console.log("Survey answers saved successfully");
         setSubmitSuccess(true);
         // if user submit their survey it should go to success page
-        navigate("/success")
+        navigate("/success");
+       
       } else {
         console.log("Error saving survey answers");
       }
