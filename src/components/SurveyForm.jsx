@@ -13,7 +13,7 @@ const SurveyForm = () => {
     "How satisfied are you with our products?",
     "How fair are the prices compared to similar retailers?",
     "How satisfied are you with the value for money of your purchase?",
-    "On a scale of 1-10, how would you recommend us to your friends and family?",
+    "How would you recommend us to your friends and family?",
     "What could we do to improve our service?",
   ];
 
@@ -21,11 +21,15 @@ const SurveyForm = () => {
     setCustomerSessionId(generateSessionId());
   }, []);
 
-  const handleAnswer = (answer) => {
+  const handleAnswer = (rating) => {
     const question = questions[currentQuestionIndex];
-    setAnswers((prevAnswers) => [...prevAnswers, { question, answer }]);
+    setAnswers((prevAnswers) => [
+      ...prevAnswers,
+      { question, answer: parseInt(rating) },
+    ]);
     setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
   };
+  
 
   const handlePrevious = () => {
     setCurrentQuestionIndex((prevIndex) => prevIndex - 1);
@@ -57,7 +61,7 @@ const SurveyForm = () => {
     }
     return (
       <div className="mt-6">
-        <div >
+        <div>
           Question {currentQuestionIndex + 1}/{questions.length}
         </div>
         <div>{question}</div>
@@ -91,51 +95,68 @@ const SurveyForm = () => {
         )}
         {currentQuestionIndex === 4 && (
           <div>
-            <textarea className="w-full mt-6 border p-4 resize-none h-20 overflow-auto " onBlur={handleTextAnswer} />
+            <textarea
+              className="w-full mt-6 border p-4 resize-none h-20 overflow-auto "
+              onBlur={handleTextAnswer}
+            />
           </div>
         )}
         <div className="mt-6">
-
-        {currentQuestionIndex > 0 && (
+          {currentQuestionIndex > 0 && (
+            <button
+              className="bg-mainclr shadow text-white px-4 py-1 rounded-md"
+              onClick={handlePrevious}
+            >
+              Previous
+            </button>
+          )}
           <button
-            className="bg-mainclr shadow text-white px-4 py-1 rounded-md"
-            onClick={handlePrevious}
+            className="bg-mainclr mx-6 shadow text-white px-4 py-1 rounded-md"
+            onClick={handleSkip}
           >
-            Previous
+            Skip
           </button>
-        )}
-        <button
-          className="bg-mainclr mx-6 shadow text-white px-4 py-1 rounded-md"
-          onClick={handleSkip}
-        >
-          Skip
-        </button>
-        {currentQuestionIndex < questions.length - 1 && (
-          <button
-            className="bg-mainclr shadow text-white px-4 py-1 rounded-md"
-            onClick={handleNext}
-          >
-            Next
-          </button>
-        )}
-        {currentQuestionIndex === questions.length - 1 && (
-          <button
-            className="bg-mainclr  shadow text-white px-4 py-1 rounded-md"
-            onClick={handleSubmit}
-          >
-            Submit
-          </button>
-        )}
+          {currentQuestionIndex < questions.length - 1 && (
+            <button
+              className="bg-mainclr shadow text-white px-4 py-1 rounded-md"
+              onClick={handleNext}
+            >
+              Next
+            </button>
+          )}
+          {currentQuestionIndex === questions.length - 1 && (
+            <button
+              className="bg-mainclr  shadow text-white px-4 py-1 rounded-md"
+              onClick={handleSubmit}
+            >
+              Submit
+            </button>
+          )}
         </div>
       </div>
     );
   };
 
   const handleSubmit = () => {
-    answers.forEach((answer) => {
-      console.log(`Question: ${answer.question}, Answer: ${answer.answer}`);
-    });
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sessionId: customerSessionId,
+        answers: answers,
+      }),
+    };
+  
+    fetch("http://localhost:4000/api/survey/answers", requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Survey answers saved successfully");
+      })
+      .catch((error) => {
+        console.log("Error saving survey answers: " + error.message);
+      });
   };
+  
 
   return (
     <div>

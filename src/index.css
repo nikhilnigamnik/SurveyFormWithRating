@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
 * {
   font-family: "Poppins", sans-serif;
   margin: 0;
@@ -12,7 +10,7 @@
 }
 
 body {
-
+  background-color: #f6f8fb;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -31,4 +29,3 @@ h1 {
 .bdr {
   box-shadow: rgba(0, 0, 0, 0.1) -4px 9px 25px -6px;
 }
-
