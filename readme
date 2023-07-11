@@ -1,1 +1,35 @@
-Project About : survey form with rating
+Title:  Survey Application
+
+Description:
+The Survey Application is a user-friendly tool designed to conduct surveys with customizable questions and store the responses in a database. The application provides a seamless user experience by displaying a welcome screen, allowing customers to navigate through questions, and finally thanking them for their participation.
+
+Features:
+
+    Welcome Screen: Upon launching the application, customers are greeted with a visually appealing welcome screen. It includes a "Start" button to initiate the survey.
+
+    Dynamic Question Storage: Questions can be stored in a database. The system should be flexible enough to allow the addition of new questions without breaking the code. This ensures scalability and accommodates future updates.
+
+    Progress Tracking: The application provides a user-friendly interface that displays the current question number (e.g., "1/5", "2/5") to indicate the progress within the survey.
+
+    Navigation Options: Customers have the flexibility to navigate freely between previous and next questions as they wish. They can move back to review and update previous responses or skip questions if needed.
+
+    Answer Storage: Each customer's answer is saved in the database. To maintain integrity, a unique identifier should be assigned to pair the question and answer accurately.
+
+    Session Management: The application employs session management to identify each customer's survey session. This allows for differentiation and tracking of responses from multiple users.
+
+    Confirmation Dialog: Once the customer reaches the last question, a confirmation dialog appears, asking for their consent to submit the survey. If confirmed, a flag is set in the database or local storage to mark the survey as 'COMPLETED'.
+
+    Thank You Screen: After the survey is completed, the customer is presented with a screen expressing gratitude for their participation. This screen remains visible for 5 seconds before redirecting back to the welcome screen.
+Technical Considerations:
+
+    HTML, CSS, and Tailwind CSS are used for the user interface design, creating visually appealing screens and components.
+    React.js is used to build the frontend, managing the dynamic UI updates, user interactions, and navigation between screens.
+    Express.js serves as the backend framework, handling routing, session management, and communication with the MongoDB database.
+    MongoDB is used as the database to store questions, answers, and session-related information.
+    Proper error handling and validation are implemented at both the frontend and backend to ensure data integrity and prevent application crashes or undesired behavior.
+
+
+
+    
+
+
