@@ -67,7 +67,7 @@ const SurveyForm = () => {
     answers.map((answer) => {
       console.log(`Question: ${answer.question}, Rating: ${answer.answer}`);
     });
-
+  
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -76,7 +76,7 @@ const SurveyForm = () => {
         answers: answers,
       }),
     };
-
+  
     try {
       const response = await fetch(
         "https://surveybackend-icee.onrender.com/api/survey/answers",
@@ -85,9 +85,8 @@ const SurveyForm = () => {
       if (response.ok) {
         console.log("Survey answers saved successfully");
         setSubmitSuccess(true);
-        // if user submit their survey it should go to success page
+        // if user submits their survey, it should go to the success page
         navigate("/success");
-       
       } else {
         console.log("Error saving survey answers");
       }
@@ -95,6 +94,7 @@ const SurveyForm = () => {
       console.log("Error saving survey answers: " + error.message);
     }
   };
+  
 
   const renderCurrentQuestion = () => {
   
