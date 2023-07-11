@@ -79,7 +79,7 @@ const SurveyForm = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:4000/api/survey/answers",
+        "https://surveybackend-icee.onrender.com/api/survey/answers",
         requestOptions
       );
       if (response.ok) {
